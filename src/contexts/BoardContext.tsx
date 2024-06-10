@@ -42,7 +42,7 @@ export function BoardContextProvider ({ children }: BoardContextProviderProps){
     return board
   }
 
-  const [board, setBoard] = useState(createBoard(9, 10))
+  const [board, setBoard] = useState(createBoard(9, 5))
   
   return (
     <BoardContext.Provider value={{
