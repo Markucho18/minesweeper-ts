@@ -1,3 +1,5 @@
+export type GameStatus = 'Playing' | 'Lost' | 'Won'
+
 export interface box {
   covered: boolean
   flag: boolean

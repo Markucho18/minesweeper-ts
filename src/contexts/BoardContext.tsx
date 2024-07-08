@@ -1,9 +1,14 @@
-import { useState, createContext, useContext } from "react"
-import { board } from "../components/types"
+import { useState, createContext, useContext, useEffect } from "react"
+import { board, GameStatus } from "../components/types"
 
 interface BoardContext {
   board: board
   setBoard: React.Dispatch<React.SetStateAction<board>>
+  gameStatus : GameStatus
+  setGameStatus : React.Dispatch<React.SetStateAction<GameStatus>>
+  totalFlags : number
+  setTotalFlags : React.Dispatch<React.SetStateAction<number>>
+  totalBombs : number
 }
 
 interface BoardContextProviderProps {
@@ -13,6 +18,12 @@ interface BoardContextProviderProps {
 export const BoardContext = createContext< BoardContext | null >(null)
 
 export function BoardContextProvider ({ children }: BoardContextProviderProps){
+
+  const [gameStatus, setGameStatus] = useState<GameStatus>('Playing')
+  
+  const rows = 9
+
+  const bombs = 5
 
   const setBombs = (bombs: number, board: board) => {
     for(let i = 0; i < bombs; i++){
@@ -42,12 +53,39 @@ export function BoardContextProvider ({ children }: BoardContextProviderProps){
     return board
   }
 
-  const [board, setBoard] = useState(createBoard(9, 5))
+  const [board, setBoard] = useState(createBoard(rows, bombs))
   
+  const getFlags = () => {
+    const boxes = board.flatMap(row => row)
+    const flagBoxes = boxes.filter(box => box.flag)
+    return flagBoxes.length
+  }
+
+  const [totalFlags, setTotalFlags] = useState(getFlags)
+
+  const [totalBombs, setTotalBombs] = useState(bombs)
+
+  const calculateTotalBombs = () => {
+    const substract = bombs - totalFlags
+    if(substract < 0) setTotalBombs(0)
+    else setTotalBombs(substract)
+  }
+  
+  useEffect(() => {
+    calculateTotalBombs()
+  }, [totalFlags])
+  
+  
+
   return (
     <BoardContext.Provider value={{
       board,
-      setBoard
+      setBoard,
+      gameStatus,
+      setGameStatus,
+      totalFlags,
+      setTotalFlags,
+      totalBombs
      }}>
       {children}
     </BoardContext.Provider>

@@ -4,7 +4,7 @@ import { useBoardContext } from "../contexts/BoardContext"
 
 const Box: React.FC<box> = (box) => {
 
-  const {board, setBoard} = useBoardContext()
+  const {board, setBoard, setGameStatus, totalFlags, setTotalFlags} = useBoardContext()
 
   const getBoxesAround = (rowPos: number, boxPos: number, diagonals: boolean) => {
     let rows = board.filter((_, i) => i >= rowPos - 1 && i <= rowPos + 1)
@@ -61,14 +61,27 @@ const Box: React.FC<box> = (box) => {
   const uncoverBox = (rowPos: number, boxPos: number) => {
     let newBoard = [...board]
     newBoard[rowPos][boxPos].covered = false
-    setBoard(newBoard)
-    if(board[rowPos][boxPos].bombsAround === 0){
-      console.log("Esto esta vacio")
-      clearEmptyBoxes(rowPos, boxPos)
+    if(newBoard[rowPos][boxPos].bomb){
+      setGameStatus('Lost')
+    }
+    else{
+      setBoard(newBoard)
+      if(board[rowPos][boxPos].bombsAround === 0){
+        console.log("Esto esta vacio")
+        clearEmptyBoxes(rowPos, boxPos)
+      }
     }
   }
 
-  const [flag, setFlag] = useState(box.flag)
+  const placeFlag = (rowPos: number, boxPos: number) => {
+    let newBoard = [...board]
+    let hasFlag = newBoard[rowPos][boxPos].flag
+    newBoard[rowPos][boxPos].flag = !hasFlag
+    setBoard(newBoard)
+    let flags = totalFlags
+    !hasFlag ? flags++ : flags--
+    setTotalFlags(flags)
+  }
 
   useEffect(()=>{
     getBombsAround()
@@ -88,11 +101,11 @@ const Box: React.FC<box> = (box) => {
           //className="size-full border-black bg-blue-600 hover:bg-blue-400"
           onClick={() => uncoverBox(box.rowIndex, box.boxIndex)}
           onContextMenu={(e) => {
-            e.preventDefault();
-            setFlag(!flag)
+            e.preventDefault()
+            placeFlag(box.rowIndex, box.boxIndex)
           }}
         >
-          {flag && "F"}
+          {box.flag && "F"}
         </button>
       ) : box.bomb ? (
         <p>B</p>
