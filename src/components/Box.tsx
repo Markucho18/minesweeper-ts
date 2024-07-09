@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { box } from "./types"
 import { useBoardContext } from "../contexts/BoardContext"
+import { useTimerContext } from "../contexts/TimerContext"
 
 const Box: React.FC<box> = (box) => {
 
-  const {board, setBoard, setGameStatus, totalFlags, setTotalFlags} = useBoardContext()
+  const {board, setBoard, gameStatus, setGameStatus, totalFlags, setTotalFlags} = useBoardContext()
+
+  const {startTimer} = useTimerContext()
 
   const getBoxesAround = (rowPos: number, boxPos: number, diagonals: boolean) => {
     let rows = board.filter((_, i) => i >= rowPos - 1 && i <= rowPos + 1)
@@ -59,6 +62,10 @@ const Box: React.FC<box> = (box) => {
 
   //SUSPENDIDO POR MOMENTO
   const uncoverBox = (rowPos: number, boxPos: number) => {
+    if(gameStatus === 'notPlaying'){
+      setGameStatus('Playing')
+      startTimer()
+    }
     let newBoard = [...board]
     newBoard[rowPos][boxPos].covered = false
     if(newBoard[rowPos][boxPos].bomb){
@@ -73,7 +80,26 @@ const Box: React.FC<box> = (box) => {
     }
   }
 
+  const uncoverAround = (rowPos : number, boxPos: number) => {
+    console.log("Se ejecuto uncover around")
+    const newBoard = [...board]
+    const boxesAround = getBoxesAround(rowPos, boxPos, true)
+    const flagsAround = boxesAround.filter(box => box.flag).length
+    if(box.bombsAround === flagsAround){
+      boxesAround.forEach(box =>{
+        if(box.flag === false){
+          newBoard[box.rowIndex][box.boxIndex].covered = false
+        }
+      })
+      setBoard(newBoard)
+    }
+  }
+
   const placeFlag = (rowPos: number, boxPos: number) => {
+    if(gameStatus === 'notPlaying'){
+      setGameStatus('Playing')
+      startTimer()
+    }
     let newBoard = [...board]
     let hasFlag = newBoard[rowPos][boxPos].flag
     newBoard[rowPos][boxPos].flag = !hasFlag
@@ -94,12 +120,17 @@ const Box: React.FC<box> = (box) => {
   const empty = "bg-green-500"
 
   return (
-    <td className="size-8">
+    <td
+      className="size-8"
+      onDoubleClick={() => uncoverAround(box.rowIndex, box.boxIndex)}
+    >
       {box.covered ? (
         <button
           className={`size-full border-black border-2  ${box.bomb ? bomb : box.bombsAround === 0 ? empty : noBomb}`}
-          //className="size-full border-black bg-blue-600 hover:bg-blue-400"
-          onClick={() => uncoverBox(box.rowIndex, box.boxIndex)}
+          onClick={() =>{
+            console.log("Se hizo click 1 vez")
+            uncoverBox(box.rowIndex, box.boxIndex)
+          }}
           onContextMenu={(e) => {
             e.preventDefault()
             placeFlag(box.rowIndex, box.boxIndex)

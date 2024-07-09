@@ -19,11 +19,11 @@ export const BoardContext = createContext< BoardContext | null >(null)
 
 export function BoardContextProvider ({ children }: BoardContextProviderProps){
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>('Playing')
+  const [gameStatus, setGameStatus] = useState<GameStatus>('notPlaying')
   
   const rows = 9
 
-  const bombs = 5
+  const bombs = 10
 
   const setBombs = (bombs: number, board: board) => {
     for(let i = 0; i < bombs; i++){
@@ -75,7 +75,7 @@ export function BoardContextProvider ({ children }: BoardContextProviderProps){
     calculateTotalBombs()
   }, [totalFlags])
   
-  
+
 
   return (
     <BoardContext.Provider value={{

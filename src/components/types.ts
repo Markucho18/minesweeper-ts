@@ -1,4 +1,4 @@
-export type GameStatus = 'Playing' | 'Lost' | 'Won'
+export type GameStatus = 'notPlaying' | 'Playing' | 'Lost' | 'Won'
 
 export interface box {
   covered: boolean
