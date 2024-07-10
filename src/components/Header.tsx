@@ -2,15 +2,15 @@ import { useEffect} from 'react'
 import { useBoardContext } from "../contexts/BoardContext"
 import { useTimerContext } from '../contexts/TimerContext'
 
-interface footer {
+interface header {
 
 }
 
-const Footer: React.FC<footer> = ()=> {
+const Header: React.FC<header> = ()=> {
 
   const {gameStatus, totalBombs} = useBoardContext()
 
-  const {count, startTimer, stopTimer} = useTimerContext()
+  const {count, stopTimer} = useTimerContext()
 
   useEffect(()=>{
     if(gameStatus === 'Lost' || gameStatus === 'Won'){
@@ -20,13 +20,12 @@ const Footer: React.FC<footer> = ()=> {
   
 
   return (
-    <footer className="flex flex-row w-full px-10 justify-between">
-      <button onClick={startTimer}>start</button>
+    <footer className="flex flex-row w-full justify-between px-2 bg-gray-500">
       <p>TIME: {count}</p>
+      <p>CARITA</p>
       <p>BOMBS: {totalBombs}</p>
-      <p>STATUS: {gameStatus}</p>
     </footer>
   )
 }
 
-export default Footer
+export default Header

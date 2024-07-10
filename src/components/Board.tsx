@@ -1,4 +1,5 @@
 import Box from "./Box"
+import { useEffect, useState} from 'react'
 import { useBoardContext } from "../contexts/BoardContext"
 
 interface Board {
@@ -6,10 +7,27 @@ interface Board {
 
 const Board: React.FC<Board> = () => {
 
-  const {board} = useBoardContext()
+  const {board, setBoard, gameStatus} = useBoardContext()
+
+  const [hasUncovered, setHasUncovered] = useState(false)
+
+  useEffect(() => {
+    if(gameStatus === 'Lost' && hasUncovered === false){
+      console.log("El gameStatus es lost xd")
+      const newBoard = board.map(row =>
+        row.map(box => ({
+          ...box,
+          covered: false
+        }))
+      );
+      setBoard(newBoard)
+      setHasUncovered(true)
+    }
+  }, [gameStatus])
+  
 
   return (
-    <table className="">
+    <table className="bg-zinc-400 ">
       <tbody>
         {board.map((row, i)=>(
           <tr key={i}>

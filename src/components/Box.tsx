@@ -1,7 +1,9 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState} from "react"
 import { box } from "./types"
 import { useBoardContext } from "../contexts/BoardContext"
 import { useTimerContext } from "../contexts/TimerContext"
+import { FaBomb } from "react-icons/fa6";
+import { PiFlagPennantFill } from "react-icons/pi";
 
 const Box: React.FC<box> = (box) => {
 
@@ -60,7 +62,6 @@ const Box: React.FC<box> = (box) => {
     setBoard(newBoard)
   }
 
-  //SUSPENDIDO POR MOMENTO
   const uncoverBox = (rowPos: number, boxPos: number) => {
     if(gameStatus === 'notPlaying'){
       setGameStatus('Playing')
@@ -68,15 +69,10 @@ const Box: React.FC<box> = (box) => {
     }
     let newBoard = [...board]
     newBoard[rowPos][boxPos].covered = false
-    if(newBoard[rowPos][boxPos].bomb){
-      setGameStatus('Lost')
-    }
-    else{
-      setBoard(newBoard)
-      if(board[rowPos][boxPos].bombsAround === 0){
-        console.log("Esto esta vacio")
-        clearEmptyBoxes(rowPos, boxPos)
-      }
+    setBoard(newBoard)
+    if(board[rowPos][boxPos].bombsAround === 0){
+      console.log("Esto esta vacio")
+      clearEmptyBoxes(rowPos, boxPos)
     }
   }
 
@@ -84,8 +80,8 @@ const Box: React.FC<box> = (box) => {
     console.log("Se ejecuto uncover around")
     const newBoard = [...board]
     const boxesAround = getBoxesAround(rowPos, boxPos, true)
-    const flagsAround = boxesAround.filter(box => box.flag).length
-    if(box.bombsAround === flagsAround){
+    const flagsAround = boxesAround.filter(box => box.flag)
+    if(box.bombsAround === flagsAround.length){
       boxesAround.forEach(box =>{
         if(box.flag === false){
           newBoard[box.rowIndex][box.boxIndex].covered = false
@@ -113,20 +109,33 @@ const Box: React.FC<box> = (box) => {
     getBombsAround()
   },[])
 
-  const bomb = "bg-red-600"
+  useEffect(()=>{
+    if(box.bomb == true && box.covered == false){
+      setGameStatus('Lost')
+    }
+  },[box])
 
-  const noBomb = "bg-blue-600 hover:bg-blue-400"
+  const numberColors = [
+    '#0000FF', // Blue
+    '#008000', // Green
+    '#FF0000', // Red
+    '#000080', // Dark blue
+    '#800000', // Dark brown
+    '#008080', // Turquoise
+    '#000000', // Black
+    '#808080'  // Gray
+  ];
 
-  const empty = "bg-green-500"
-
+  const numberColor = numberColors[bombsAround - 1]
+  
   return (
     <td
-      className="size-8"
-      onDoubleClick={() => uncoverAround(box.rowIndex, box.boxIndex)}
+    className="size-8 select-none border-gray-500 border-[2px] p-0 m-0 text-center"
+    onDoubleClick={() => uncoverAround(box.rowIndex, box.boxIndex)}
     >
       {box.covered ? (
         <button
-          className={`size-full border-black border-2  ${box.bomb ? bomb : box.bombsAround === 0 ? empty : noBomb}`}
+          className={`size-full brick flex justify-center items-center`}
           onClick={() =>{
             console.log("Se hizo click 1 vez")
             uncoverBox(box.rowIndex, box.boxIndex)
@@ -136,12 +145,21 @@ const Box: React.FC<box> = (box) => {
             placeFlag(box.rowIndex, box.boxIndex)
           }}
         >
-          {box.flag && "F"}
+          {box.flag && (
+            <PiFlagPennantFill className="text-red-500 size-[80%]"/>
+          )}
         </button>
       ) : box.bomb ? (
-        <p>B</p>
+        <span className="size-full flex justify-center items-center bg-red-600">
+          <FaBomb className="size-[80%] pixel"/>
+        </span>
       ) : (
-        <p>{bombsAround === 0 ? "X" : bombsAround}</p>
+        <p 
+          className="pixel"
+          style={{color: numberColor}}
+        >
+          {bombsAround === 0 ? "" : bombsAround}
+        </p>
       )}
     </td>
   )
