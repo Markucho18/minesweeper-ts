@@ -2,8 +2,8 @@ import { useEffect, useState} from "react"
 import { box } from "./types"
 import { useBoardContext } from "../contexts/BoardContext"
 import { useTimerContext } from "../contexts/TimerContext"
-import { FaBomb } from "react-icons/fa6";
 import { PiFlagPennantFill } from "react-icons/pi";
+import bomb from "../assets/bomb.png" 
 
 const Box: React.FC<box> = (box) => {
 
@@ -150,11 +150,9 @@ const Box: React.FC<box> = (box) => {
           )}
         </button>
       ) : box.bomb ? (
-        <span className="size-full flex justify-center items-center bg-red-600">
-          <FaBomb className="size-[80%] pixel"/>
-        </span>
-      ) : (
-        <p 
+          <img src={bomb} className="bg-red-500"/>
+        ) : (
+          <p 
           className="pixel"
           style={{color: numberColor}}
         >
@@ -166,3 +164,6 @@ const Box: React.FC<box> = (box) => {
 }
 
 export default Box
+          {/* <span className="size-full flex justify-center items-center bg-red-600">
+            
+          </span> */}

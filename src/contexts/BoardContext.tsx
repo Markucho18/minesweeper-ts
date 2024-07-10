@@ -21,9 +21,12 @@ export function BoardContextProvider ({ children }: BoardContextProviderProps){
 
   const [gameStatus, setGameStatus] = useState<GameStatus>('notPlaying')
   
-  const rows = 9
+  const rows = 16
 
-  const bombs = 10
+  const bombs = 40
+
+  //Easy: 9, 10
+  //Medium: 16,40
 
   const setBombs = (bombs: number, board: board) => {
     for(let i = 0; i < bombs; i++){

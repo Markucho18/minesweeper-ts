@@ -32,3 +32,21 @@ body {
 .pixel {
   font-family: 'Public Pixel', sans-serif;
 }
+
+.alarmFont {
+  font-family: 'alarm clock', sans-serif;
+}
+
+.coolBorder{
+  border-left-color: #6e6e6e;
+  border-top-color: #6e6e6e;
+  border-bottom-color: #CCC;
+  border-right-color: #CCC;
+}
+
+.borderCool{
+  border-bottom-color: #6e6e6e;
+  border-right-color: #6e6e6e;
+  border-left-color: #CCC;
+  border-top-color: #CCC;
+}

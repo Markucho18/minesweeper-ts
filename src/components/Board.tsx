@@ -27,7 +27,7 @@ const Board: React.FC<Board> = () => {
   
 
   return (
-    <table className="bg-zinc-400 ">
+    <table className="bg-zinc-400 border-4 border-l-[#6e6e6e] border-t-[#6e6e6e] border-b-[#CCC] border-r-[#CCC]">
       <tbody>
         {board.map((row, i)=>(
           <tr key={i}>
