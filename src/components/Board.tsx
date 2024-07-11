@@ -12,6 +12,9 @@ const Board: React.FC<Board> = () => {
   const [hasUncovered, setHasUncovered] = useState(false)
 
   useEffect(() => {
+    if(gameStatus === 'Playing'){
+      setHasUncovered(false)
+    }
     if(gameStatus === 'Lost' && hasUncovered === false){
       console.log("El gameStatus es lost xd")
       const newBoard = board.map(row =>

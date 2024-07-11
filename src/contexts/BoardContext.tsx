@@ -1,5 +1,5 @@
 import { useState, createContext, useContext, useEffect } from "react"
-import { board, GameStatus } from "../components/types"
+import { board, Difficulty, GameStatus } from "../components/types"
 
 interface BoardContext {
   board: board
@@ -9,6 +9,8 @@ interface BoardContext {
   totalFlags : number
   setTotalFlags : React.Dispatch<React.SetStateAction<number>>
   totalBombs : number
+  difficulty : Difficulty
+  setDifficulty : React.Dispatch<React.SetStateAction<Difficulty>>
 }
 
 interface BoardContextProviderProps {
@@ -20,14 +22,23 @@ export const BoardContext = createContext< BoardContext | null >(null)
 export function BoardContextProvider ({ children }: BoardContextProviderProps){
 
   const [gameStatus, setGameStatus] = useState<GameStatus>('notPlaying')
+
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy')
+
+  const difficultyData = {
+    "easy":{
+      rows: 9,
+      bombs: 10
+    },
+    "medium":{
+      rows: 16,
+      bombs: 40
+    }
+  }
+
+  const rows = difficultyData[difficulty].rows
+  const bombs = difficultyData[difficulty].bombs
   
-  const rows = 16
-
-  const bombs = 40
-
-  //Easy: 9, 10
-  //Medium: 16,40
-
   const setBombs = (bombs: number, board: board) => {
     for(let i = 0; i < bombs; i++){
       let row = Math.floor(Math.random() * (board.length - 1))
@@ -55,8 +66,8 @@ export function BoardContextProvider ({ children }: BoardContextProviderProps){
     setBombs(bombs, board)
     return board
   }
-
-  const [board, setBoard] = useState(createBoard(rows, bombs))
+  
+  const [board, setBoard] = useState<board>(createBoard(rows, bombs))
   
   const getFlags = () => {
     const boxes = board.flatMap(row => row)
@@ -78,7 +89,20 @@ export function BoardContextProvider ({ children }: BoardContextProviderProps){
     calculateTotalBombs()
   }, [totalFlags])
   
+  useEffect(()=>{
+    const newRows = difficultyData[difficulty].rows
+    const newBombs = difficultyData[difficulty].bombs
+    const newBoard = createBoard(newRows, newBombs)
+    setBoard(newBoard)
+    setGameStatus('notPlaying')
+  },[difficulty])
 
+  useEffect(()=>{
+    console.log(`El gameStatus cambio a ${gameStatus}`)
+  },[gameStatus])
+
+  //FUNCION RESTARTGAME:
+  // PARAR TEMPORIZADOR Y CAMBIAR BOMBAS, 
 
   return (
     <BoardContext.Provider value={{
@@ -88,7 +112,9 @@ export function BoardContextProvider ({ children }: BoardContextProviderProps){
       setGameStatus,
       totalFlags,
       setTotalFlags,
-      totalBombs
+      totalBombs,
+      difficulty,
+      setDifficulty
      }}>
       {children}
     </BoardContext.Provider>

@@ -111,6 +111,7 @@ const Box: React.FC<box> = (box) => {
 
   useEffect(()=>{
     if(box.bomb == true && box.covered == false){
+      console.log("hay bomba")
       setGameStatus('Lost')
     }
   },[box])

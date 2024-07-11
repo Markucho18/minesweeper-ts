@@ -50,13 +50,13 @@ function App() {
           <Board/>
         </main>
       </div>
-      {gameStatus == "Lost" && (
+      {/* {gameStatus == "Lost" && (
         <div className="flex flex-col items-center justify-center bg-zinc-600/25 w-full h-full fixed top-0 left-0">
           <main className="bg-white rounded-md p-4">
             <p>YOU LOST! HHAHAHAAHH</p>
           </main>
         </div>
-      )}
+      )} */}
       {gameStatus == "Won" && (
         <div className="flex flex-col items-center justify-center bg-zinc-600/25 w-full h-full fixed top-0 left-0">
           <main className="bg-white rounded-md p-4">

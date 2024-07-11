@@ -2,7 +2,6 @@ import { useEffect} from 'react'
 import { useBoardContext } from "../contexts/BoardContext"
 import { useTimerContext } from '../contexts/TimerContext'
 import happyFace from "../assets/happyFace.png"
-import { useModalContext } from '../contexts/ModalContext'
 
 interface header {
 
