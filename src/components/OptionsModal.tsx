@@ -7,7 +7,7 @@ interface optionsModal {}
 
 const OptionsModal: React.FC<optionsModal> = () => {
 
-  const { difficulty, setDifficulty } = useBoardContext()
+  const { difficulty, setDifficulty, setGameStatus } = useBoardContext()
 
   const { setModalIsOpen } = useModalContext()
 
@@ -21,6 +21,7 @@ const OptionsModal: React.FC<optionsModal> = () => {
     else{
       setDifficulty('medium')
     }
+    setGameStatus("notPlaying")
     setModalIsOpen(false)
   }
 

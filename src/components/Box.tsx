@@ -3,7 +3,7 @@ import { box } from "./types"
 import { useBoardContext } from "../contexts/BoardContext"
 import { useTimerContext } from "../contexts/TimerContext"
 import { PiFlagPennantFill } from "react-icons/pi";
-import bomb from "../assets/bomb.png" 
+import Bomb from "./Bomb"
 
 const Box: React.FC<box> = (box) => {
 
@@ -151,7 +151,7 @@ const Box: React.FC<box> = (box) => {
           )}
         </button>
       ) : box.bomb ? (
-          <img src={bomb} className="bg-red-500"/>
+          <Bomb/>
         ) : (
           <p 
           className="pixel"
@@ -165,6 +165,4 @@ const Box: React.FC<box> = (box) => {
 }
 
 export default Box
-          {/* <span className="size-full flex justify-center items-center bg-red-600">
-            
-          </span> */}
+          

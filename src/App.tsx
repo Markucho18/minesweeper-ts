@@ -50,6 +50,7 @@ function App() {
           <Board/>
         </main>
       </div>
+      <p>GameStatus: {gameStatus}</p>
       {/* {gameStatus == "Lost" && (
         <div className="flex flex-col items-center justify-center bg-zinc-600/25 w-full h-full fixed top-0 left-0">
           <main className="bg-white rounded-md p-4">
